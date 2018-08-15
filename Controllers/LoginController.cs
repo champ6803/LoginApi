@@ -19,6 +19,7 @@ namespace LoginApi.Controllers
     [Route("api/[controller]")]
     public class LoginController : Controller
     {
+        private ProfileHelper proHelp = new ProfileHelper();
         private IConfiguration _config;
         private UserHelper userHel = new UserHelper();
 
@@ -80,6 +81,21 @@ namespace LoginApi.Controllers
                 user = await userHel.GetUserByUserPassword(login.username, login.password);
             }
             return user;
+        }
+
+        [HttpGet, Authorize]
+        public async Task<IEnumerable<ProfileModel>> GetProfileAll()
+        {
+            var all = proHelp.GetProfileList();
+            return await all;
+        }
+
+        [HttpPost("getprofile"), Authorize]
+        public async Task<ProfileModel> GetProfileByEmail(string email)
+        {
+            //string email = "chingchana@gmail.com";
+            var profile = proHelp.GetProfileByEmail(email);
+            return await profile;
         }
     }
 }
